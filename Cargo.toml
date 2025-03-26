@@ -1,0 +1,14 @@
+[workspace]
+members = [ "apps/common",
+    "apps/user/rpc"
+]
+resolver = "2"
+
+[workspace.dependencies]
+tonic-build = "0.13.0"
+prost = "0.13.5"
+prost-types = "0.13.5"
+serde = "1.0.219"
+serde_yaml = "0.9.34"
+tonic = "0.13.0"
+tower = "0.4.13"
