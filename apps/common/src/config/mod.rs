@@ -43,6 +43,11 @@ pub struct RedisConfig {
     pub host: String,
     pub port: u16,
 }
+impl RedisConfig {
+    pub fn url(&self) -> String {
+        format!("redis://{}:{}", self.host, self.port)
+    }
+}
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct JwtConfig {
