@@ -1,6 +1,7 @@
 [workspace]
 members = [ "apps/common",
-    "apps/user/rpc"
+    "apps/user/rpc",
+    "apps/user/api"
 ]
 resolver = "2"
 
