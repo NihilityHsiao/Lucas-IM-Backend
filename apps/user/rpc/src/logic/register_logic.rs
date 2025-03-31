@@ -65,8 +65,6 @@ pub async fn register_logic(
 
     svc.user_repo.insert(user).await?;
 
-    // todo: 生成token
-
     let resp = RegisterResponse::default();
     Ok(Response::new(resp))
 }
