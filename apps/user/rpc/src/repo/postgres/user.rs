@@ -36,9 +36,40 @@ impl UserRepo for UserPostgres {
         Ok(user)
     }
 
+    async fn find_by_ids(&self, ids:Vec<String>) -> Result<Vec<User>, Error> {
+        let sql = format!(r"select * from users where id in ('{}')", ids.join(r"','"));
+        let rows = sqlx::query_as(&sql).fetch_all(&self.pool).await?;
+
+        Ok(rows)
+    }
+
     async fn find_by_account(&self, account: &str) -> Result<Option<User>, Error> {
         let user = sqlx::query_as("select * from users where account = $1")
             .bind(account)
+            .fetch_optional(&self.pool)
+            .await?;
+        Ok(user)
+    }
+
+    async fn find_by_email(&self, email: &str) -> Result<Option<User>, Error> {
+        let user = sqlx::query_as("select * from users where email = $1")
+            .bind(email)
+            .fetch_optional(&self.pool)
+            .await?;
+        Ok(user)
+    }
+
+    async fn find_by_phone(&self, phone: &str) -> Result<Option<User>, Error> {
+        let user = sqlx::query_as("select * from users where phone = $1")
+            .bind(phone)
+            .fetch_optional(&self.pool)
+            .await?;
+        Ok(user)
+    }
+
+    async fn find_by_name(&self, name: &str) -> Result<Option<User>, Error> {
+        let user = sqlx::query_as("select * from users where name = $1")
+            .bind(name)
             .fetch_optional(&self.pool)
             .await?;
         Ok(user)

@@ -10,7 +10,11 @@ pub(crate) mod redis;
 #[async_trait]
 pub trait UserRepo: Sync + Send + Debug {
     async fn find_by_id(&self, id: &str) -> Result<Option<User>, Error>;
+    async fn find_by_ids(&self, ids: Vec<String>) -> Result<Vec<User>, Error>;
     async fn find_by_account(&self, account: &str) -> Result<Option<User>, Error>;
+    async fn find_by_email(&self, email: &str) -> Result<Option<User>, Error>;
+    async fn find_by_phone(&self, phone: &str) -> Result<Option<User>, Error>;
+    async fn find_by_name(&self, name: &str) -> Result<Option<User>, Error>;
     async fn find_by_account_or_email(
         &self,
         account: &str,

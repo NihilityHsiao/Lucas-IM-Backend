@@ -77,6 +77,17 @@ message GetUserInfoResponse{
   User user = 1;
 }
 
+message FindUserRequest{
+  repeated string user_id = 1;
+  optional string name = 2;
+  optional string account = 3;
+  optional string phone = 4;
+  optional string email = 5;
+}
+message FindUserResponse{
+  repeated User users = 1;
+}
+
 service UserService{
   rpc Ping(Request) returns (Response);
   rpc Register(RegisterRequest) returns (RegisterResponse);
@@ -87,4 +98,6 @@ service UserService{
   rpc GetUserOnlineCount(UserOnlineCountRequest) returns (UserOnlineCountResponse);
   // 获取用户信息
   rpc GetUserInfo(GetUserInfoRequest) returns (GetUserInfoResponse);
+  // 查找用户
+  rpc FindUser(FindUserRequest) returns (FindUserResponse);
 }

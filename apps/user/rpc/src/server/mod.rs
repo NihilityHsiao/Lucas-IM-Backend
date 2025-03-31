@@ -1,14 +1,14 @@
 use crate::config::Config;
 use crate::logic::{
-    get_user_info_logic, get_user_online_count_logic, login_logic, ping_logic, register_logic,
-    send_register_code_logic,
+    find_user_logic, get_user_info_logic, get_user_online_count_logic, login_logic, ping_logic,
+    register_logic, send_register_code_logic,
 };
 use crate::pb;
 use crate::pb::user::user_service_server::{UserService, UserServiceServer};
 use crate::pb::user::{
-    GetUserInfoRequest, GetUserInfoResponse, LoginRequest, LoginResponse, RegisterRequest,
-    RegisterResponse, SendRegisterCodeRequest, SendRegisterCodeResponse, UserOnlineCountRequest,
-    UserOnlineCountResponse,
+    FindUserRequest, FindUserResponse, GetUserInfoRequest, GetUserInfoResponse, LoginRequest,
+    LoginResponse, RegisterRequest, RegisterResponse, SendRegisterCodeRequest,
+    SendRegisterCodeResponse, UserOnlineCountRequest, UserOnlineCountResponse,
 };
 use crate::service_context::ServiceContext;
 use tonic::transport::Server;
@@ -87,5 +87,12 @@ impl UserService for UserRpcServer {
         request: Request<GetUserInfoRequest>,
     ) -> Result<Response<GetUserInfoResponse>, Status> {
         get_user_info_logic(&self.svc, request).await
+    }
+
+    async fn find_user(
+        &self,
+        request: Request<FindUserRequest>,
+    ) -> Result<Response<FindUserResponse>, Status> {
+        find_user_logic(&self.svc, request).await
     }
 }

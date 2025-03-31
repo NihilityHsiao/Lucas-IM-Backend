@@ -116,6 +116,24 @@ pub struct GetUserInfoResponse {
     #[prost(message, optional, tag = "1")]
     pub user: ::core::option::Option<User>,
 }
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct FindUserRequest {
+    #[prost(string, repeated, tag = "1")]
+    pub user_id: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "2")]
+    pub name: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "3")]
+    pub account: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "4")]
+    pub phone: ::core::option::Option<::prost::alloc::string::String>,
+    #[prost(string, optional, tag = "5")]
+    pub email: ::core::option::Option<::prost::alloc::string::String>,
+}
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct FindUserResponse {
+    #[prost(message, repeated, tag = "1")]
+    pub users: ::prost::alloc::vec::Vec<User>,
+}
 /// Generated client implementations.
 pub mod user_service_client {
     #![allow(
@@ -296,6 +314,21 @@ pub mod user_service_client {
                 .insert(GrpcMethod::new("user.UserService", "GetUserInfo"));
             self.inner.unary(req, path, codec).await
         }
+        /// 查找用户
+        pub async fn find_user(
+            &mut self,
+            request: impl tonic::IntoRequest<super::FindUserRequest>,
+        ) -> std::result::Result<tonic::Response<super::FindUserResponse>, tonic::Status> {
+            self.inner.ready().await.map_err(|e| {
+                tonic::Status::unknown(format!("Service was not ready: {}", e.into()))
+            })?;
+            let codec = tonic::codec::ProstCodec::default();
+            let path = http::uri::PathAndQuery::from_static("/user.UserService/FindUser");
+            let mut req = request.into_request();
+            req.extensions_mut()
+                .insert(GrpcMethod::new("user.UserService", "FindUser"));
+            self.inner.unary(req, path, codec).await
+        }
     }
 }
 /// Generated server implementations.
@@ -338,6 +371,11 @@ pub mod user_service_server {
             &self,
             request: tonic::Request<super::GetUserInfoRequest>,
         ) -> std::result::Result<tonic::Response<super::GetUserInfoResponse>, tonic::Status>;
+        /// 查找用户
+        async fn find_user(
+            &self,
+            request: tonic::Request<super::FindUserRequest>,
+        ) -> std::result::Result<tonic::Response<super::FindUserResponse>, tonic::Status>;
     }
     #[derive(Debug)]
     pub struct UserServiceServer<T> {
@@ -632,6 +670,44 @@ pub mod user_service_server {
                     let inner = self.inner.clone();
                     let fut = async move {
                         let method = GetUserInfoSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            )
+                            .apply_max_message_size_config(
+                                max_decoding_message_size,
+                                max_encoding_message_size,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/user.UserService/FindUser" => {
+                    #[allow(non_camel_case_types)]
+                    struct FindUserSvc<T: UserService>(pub Arc<T>);
+                    impl<T: UserService> tonic::server::UnaryService<super::FindUserRequest> for FindUserSvc<T> {
+                        type Response = super::FindUserResponse;
+                        type Future = BoxFuture<tonic::Response<Self::Response>, tonic::Status>;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::FindUserRequest>,
+                        ) -> Self::Future {
+                            let inner = Arc::clone(&self.0);
+                            let fut =
+                                async move { <T as UserService>::find_user(&inner, request).await };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let max_decoding_message_size = self.max_decoding_message_size;
+                    let max_encoding_message_size = self.max_encoding_message_size;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let method = FindUserSvc(inner);
                         let codec = tonic::codec::ProstCodec::default();
                         let mut grpc = tonic::server::Grpc::new(codec)
                             .apply_compression_config(
