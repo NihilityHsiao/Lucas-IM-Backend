@@ -74,7 +74,7 @@ mod tests {
         let account = "test_account";
 
         // save
-        assert!(cache.get_user_register_code(account).await.is_ok());
+        assert!(cache.save_user_register_code(account,code).await.is_ok());
 
         // get
         let get_res = cache.get_user_register_code(account).await;
