@@ -1,0 +1,90 @@
+syntax = "proto3";
+package user;
+
+message User{
+  // 用户id
+  string id = 1;
+  string name = 2;
+  string account = 3;
+  string password = 4;
+  string avatar = 5;
+  string gender = 6;
+  int32 age = 7;
+  optional string phone = 8;
+  optional string email = 9;
+  optional string address = 10;
+  optional string region = 11;
+  optional int64 birthday = 12;
+  int64 create_time = 13;
+  int64 update_time = 14;
+  string salt = 15;
+  string signature = 16;
+}
+
+// 用户注册
+message RegisterRequest{
+  string name = 1;
+  string account = 2;
+  string password = 3;
+  string email = 4;
+  // 验证码
+  string code = 5;
+  string avatar = 6;
+}
+
+message RegisterResponse{
+  string token = 1;
+  int64 expire = 2;
+}
+
+message Request {
+  string ping = 1;
+}
+
+message Response {
+  string pong = 1;
+}
+
+message SendRegisterCodeRequest{
+    string account = 1;
+    string email = 2;
+}
+message SendRegisterCodeResponse{
+    string code = 1;
+
+}
+message LoginRequest{
+  string account = 1;
+  string password = 2;
+
+}
+message LoginResponse{
+  string user_id = 1;
+  string token = 2;
+  string refresh_token = 3;
+}
+
+message UserOnlineCountRequest{}
+message UserOnlineCountResponse{
+  int64 count = 1;
+}
+
+
+message GetUserInfoRequest{
+  string user_id = 1;
+}
+message GetUserInfoResponse{
+  User user = 1;
+}
+
+service UserService{
+  rpc Ping(Request) returns (Response);
+  rpc Register(RegisterRequest) returns (RegisterResponse);
+  rpc Login(LoginRequest) returns (LoginResponse);
+  // 发送注册验证码到邮箱, 并返回验证码
+  rpc SendRegisterCode(SendRegisterCodeRequest) returns (SendRegisterCodeResponse);
+  // 统计用户在线数量
+  rpc GetUserOnlineCount(UserOnlineCountRequest) returns (UserOnlineCountResponse);
+  // 获取用户信息
+  rpc GetUserInfo(GetUserInfoRequest) returns (GetUserInfoResponse);
+}
