@@ -3,6 +3,7 @@ use crate::service_register::{ServiceInstance, ServiceRegister};
 use dashmap::DashMap;
 use std::fmt::Formatter;
 use std::sync::Arc;
+use async_trait::async_trait;
 use tonic::transport::Channel;
 
 pub struct EtcdServiceDiscovery {
@@ -18,6 +19,7 @@ impl std::fmt::Debug for EtcdServiceDiscovery {
     }
 }
 
+#[async_trait]
 impl ServiceDiscovery for EtcdServiceDiscovery {
     async fn get_service(&self, service_name: &str) -> anyhow::Result<Vec<ServiceInstance>> {
         todo!()
