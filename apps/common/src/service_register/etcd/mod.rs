@@ -1,5 +1,5 @@
 use crate::service_register::{ServiceInstance, ServiceRegister};
-use crate::EtcdConfig;
+use crate::{EtcdConfig, ETCD_NAMESPACE};
 use anyhow::{anyhow, bail};
 use async_trait::async_trait;
 use etcd_client::{GetOptions, LeaseKeepAliveStream, LeaseKeeper};
@@ -28,8 +28,8 @@ pub struct EtcdServiceRegister {
 impl EtcdServiceRegister {
     pub async fn new(client: etcd_client::Client) -> anyhow::Result<Self> {
         let op = Options {
-            namespace: "/lucasim/microservices".to_string(),
-            ttl: DEFAULT_TTL_SECOND,
+            namespace: ETCD_NAMESPACE.to_string(),
+            ttl: DEFAULT_TTL_SECOND * 2,
             max_retry: 5,
         };
 
@@ -48,7 +48,7 @@ impl EtcdServiceRegister {
             .await
             .map_err(|e| anyhow!("connect to etcd failed: {}", e.to_string()))?;
         let op = Options {
-            namespace: "/lucasim/microservices".to_string(),
+            namespace:ETCD_NAMESPACE.to_string(),
             ttl: DEFAULT_TTL_SECOND,
             max_retry: 5,
         };

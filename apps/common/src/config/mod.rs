@@ -4,6 +4,13 @@ use serde::{Deserialize, Serialize};
 pub struct EtcdConfig {
     pub hosts: Vec<String>,
     pub key: String,
+    pub scheme: String,
+}
+
+impl  EtcdConfig {
+    pub fn urls(&self) -> Vec<String> {
+        self.hosts.iter().map(|s| format!("{}://{}", self.scheme, s)).collect()
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
