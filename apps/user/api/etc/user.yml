@@ -1,5 +1,5 @@
 name: user.rpc
-listen_on: 127.0.0.1:50052
+listen_on: 127.0.0.1:50062
 
 user_rpc:
   etcd:
@@ -11,3 +11,7 @@ user_rpc:
 jwt:
   secret: Lucas-IM
   access_expire: 8640000
+
+log:
+  level: info
+

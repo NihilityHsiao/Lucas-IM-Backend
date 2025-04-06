@@ -6,6 +6,4 @@ pub mod service_register;
 
 pub use config::*;
 
-
 pub(crate) const ETCD_NAMESPACE: &str = "/lucasim/services";
-

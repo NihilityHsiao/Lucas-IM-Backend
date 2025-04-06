@@ -13,4 +13,3 @@ pub struct Config {
 }
 
 impl LoadableConfig for Config {}
-

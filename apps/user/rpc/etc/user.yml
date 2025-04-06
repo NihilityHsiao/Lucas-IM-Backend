@@ -1,4 +1,4 @@
-name: user.rpc
+name: user.rpc2
 listen_on: 127.0.0.1:50052
 # 使用etcd作为注册中心
 etcd:

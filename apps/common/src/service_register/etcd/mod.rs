@@ -48,7 +48,7 @@ impl EtcdServiceRegister {
             .await
             .map_err(|e| anyhow!("connect to etcd failed: {}", e.to_string()))?;
         let op = Options {
-            namespace:ETCD_NAMESPACE.to_string(),
+            namespace: ETCD_NAMESPACE.to_string(),
             ttl: DEFAULT_TTL_SECOND,
             max_retry: 5,
         };
@@ -252,6 +252,7 @@ mod tests {
         let etcd_config = EtcdConfig {
             hosts: vec!["192.168.0.103:2379".to_string()],
             key: "user.rpc".to_string(),
+            scheme: "".to_string(),
         };
         let mut reg_1 = EtcdServiceRegister::from_config(&etcd_config).await?;
 
@@ -267,6 +268,7 @@ mod tests {
         let config = EtcdConfig {
             hosts: vec!["192.168.0.103:2379".to_string()],
             key: "user.rpc".to_string(),
+            scheme: "".to_string(),
         };
         let mut reg_1 = EtcdServiceRegister::from_config(&config).await?;
 

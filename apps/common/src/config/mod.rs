@@ -1,13 +1,13 @@
-use std::path::Path;
-use serde::{Deserialize, Serialize};
 use serde::de::DeserializeOwned;
+use serde::{Deserialize, Serialize};
+use std::path::Path;
 
-pub trait LoadableConfig:Sized + DeserializeOwned{
-     fn load(file: impl AsRef<Path>) -> Self {
-         let content = std::fs::read_to_string(file).expect("load config file success");
-         let config: Self = serde_yaml::from_str(&content).expect("parse config file success");
-         config
-     }
+pub trait LoadableConfig: Sized + DeserializeOwned {
+    fn load(file: impl AsRef<Path>) -> Self {
+        let content = std::fs::read_to_string(file).expect("load config file success");
+        let config: Self = serde_yaml::from_str(&content).expect("parse config file success");
+        config
+    }
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -17,9 +17,12 @@ pub struct EtcdConfig {
     pub scheme: String,
 }
 
-impl  EtcdConfig {
+impl EtcdConfig {
     pub fn urls(&self) -> Vec<String> {
-        self.hosts.iter().map(|s| format!("{}://{}", self.scheme, s)).collect()
+        self.hosts
+            .iter()
+            .map(|s| format!("{}://{}", self.scheme, s))
+            .collect()
     }
 }
 

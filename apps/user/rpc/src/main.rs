@@ -1,7 +1,7 @@
 use common::service_discovery::etcd::EtcdServiceDiscovery;
 use common::service_register::ServiceRegister;
-use tracing::Level;
 use common::LoadableConfig;
+use tracing::Level;
 use user_rpc::config::Config;
 use user_rpc::UserRpcServer;
 

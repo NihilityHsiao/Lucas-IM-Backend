@@ -41,7 +41,7 @@ impl UserRpcServer {
             .service_register
             .register(ServiceInstance {
                 id: nanoid!(),
-                name: config.name.clone(),
+                name: config.etcd.key.clone(),
                 endpoints: vec![config.listen_on.clone()],
                 version: "0.1".to_string(),
                 metadata: Default::default(),

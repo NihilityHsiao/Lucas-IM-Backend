@@ -1,9 +1,10 @@
-use std::collections::HashMap;
 use crate::service_discovery::ServiceDiscovery;
 use crate::service_register::ServiceInstance;
+use crate::{EtcdConfig, ETCD_NAMESPACE};
 use async_trait::async_trait;
 use dashmap::DashMap;
 use etcd_client::{EventType, GetOptions, KeyValue, WatchOptions};
+use std::collections::HashMap;
 use std::fmt::Formatter;
 use std::sync::{Arc, RwLock};
 use std::time::Duration;
@@ -11,7 +12,6 @@ use tokio::sync::mpsc::Sender;
 use tonic::transport::channel::Change;
 use tonic::transport::{Channel, Endpoint};
 use tracing::info;
-use crate::{EtcdConfig, ETCD_NAMESPACE};
 
 pub struct EtcdServiceDiscovery {
     etcd_client: etcd_client::Client,
@@ -40,7 +40,10 @@ impl EtcdServiceDiscovery {
 
     /// 启动服务发现
     pub async fn discovery(&mut self, name: &str) -> anyhow::Result<()> {
-        info!("discovery start, namespace/service_name:{}/{}",ETCD_NAMESPACE,name);
+        info!(
+            "discovery start, namespace/service_name:{}/{}",
+            ETCD_NAMESPACE, name
+        );
         let service_name = format!("{}/{}", ETCD_NAMESPACE, name);
         let opt = Some(GetOptions::new().with_prefix());
         let resp = self.etcd_client.get(service_name.clone(), opt).await?;
@@ -77,7 +80,8 @@ impl EtcdServiceDiscovery {
                                             continue;
                                         }
                                     };
-                                Self::add_service_map(&tx, &service_map, key, service_instance).await;
+                                Self::add_service_map(&tx, &service_map, key, service_instance)
+                                    .await;
                             }
                         }
                         EventType::Delete => {
@@ -95,7 +99,6 @@ impl EtcdServiceDiscovery {
             let _ = watcher.cancel().await.unwrap();
         });
 
-
         Ok(())
     }
 }
@@ -109,8 +112,7 @@ impl EtcdServiceDiscovery {
         Ok(Endpoint::from_shared(uri.into())?.timeout(Duration::from_secs(timeout)))
     }
 
-     pub async fn add_service(&self, key: impl AsRef<str>, value: &str) {
-
+    pub async fn add_service(&self, key: impl AsRef<str>, value: &str) {
         let instance = match serde_json::from_str(value) {
             Ok(v) => v,
             Err(e) => {
@@ -119,7 +121,6 @@ impl EtcdServiceDiscovery {
             }
         };
         Self::add_service_map(&self.tx, &self.service_map, key.as_ref(), instance).await;
-
     }
     #[allow(unused_variables)]
     #[inline]
@@ -129,11 +130,10 @@ impl EtcdServiceDiscovery {
         key: impl Into<String>,
         instance: ServiceInstance,
     ) {
-
-        let key = format!("{}/{}",ETCD_NAMESPACE,instance.name);
+        let key = format!("{}/{}", ETCD_NAMESPACE, instance.name);
 
         for ins in instance.endpoints.iter() {
-            info!("add service map, key:{:?}, instance:{:?}",key,ins);
+            info!("add service map, key:{:?}, instance:{:?}", key, ins);
 
             let ins = format!("http://{}", ins);
             if let Ok(endpoint) = Self::new_endpoint(ins, 10) {
@@ -147,7 +147,11 @@ impl EtcdServiceDiscovery {
     }
 
     #[inline]
-    fn remove_service_map(rx: &Sender<Change<String, Endpoint>>, service_map: &RwLock<HashMap<String, Channel>>, key: impl AsRef<str>) {
+    fn remove_service_map(
+        rx: &Sender<Change<String, Endpoint>>,
+        service_map: &RwLock<HashMap<String, Channel>>,
+        key: impl AsRef<str>,
+    ) {
         service_map.write().unwrap().remove(key.as_ref());
         rx.try_send(Change::Remove(key.as_ref().into()))
             .expect("send remove event to channel success");
@@ -176,4 +180,3 @@ impl ServiceDiscovery for EtcdServiceDiscovery {
         todo!()
     }
 }
-
