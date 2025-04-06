@@ -54,10 +54,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "dcfed56ad506cb2c684a14971b8861fdc3baaaae314b9e5f9bb532cbe3ba7a4f"
 
 [[package]]
-name = "api"
-version = "0.1.0"
-
-[[package]]
 name = "arc-swap"
 version = "1.7.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -349,6 +345,7 @@ dependencies = [
  "nanoid",
  "serde",
  "serde_json",
+ "serde_yaml",
  "tokio",
  "tonic 0.13.0",
  "tower 0.5.2",
@@ -2637,6 +2634,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "user-api"
+version = "0.1.0"
+dependencies = [
+ "common",
+ "serde",
+]
+
+[[package]]
 name = "user-rpc"
 version = "0.1.0"
 dependencies = [
@@ -2653,6 +2658,7 @@ dependencies = [
  "rand",
  "redis",
  "serde",
+ "serde_json",
  "serde_yaml",
  "sqlx",
  "tokio",

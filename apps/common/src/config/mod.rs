@@ -1,4 +1,14 @@
+use std::path::Path;
 use serde::{Deserialize, Serialize};
+use serde::de::DeserializeOwned;
+
+pub trait LoadableConfig:Sized + DeserializeOwned{
+     fn load(file: impl AsRef<Path>) -> Self {
+         let content = std::fs::read_to_string(file).expect("load config file success");
+         let config: Self = serde_yaml::from_str(&content).expect("parse config file success");
+         config
+     }
+}
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct EtcdConfig {

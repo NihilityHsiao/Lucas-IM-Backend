@@ -1,0 +1,13 @@
+name: user.rpc
+listen_on: 127.0.0.1:50052
+
+user_rpc:
+  etcd:
+    hosts:
+      - 192.168.0.103:2379
+    key: user.rpc
+    scheme: http
+
+jwt:
+  secret: Lucas-IM
+  access_expire: 8640000

@@ -8,3 +8,4 @@ pub use config::*;
 
 
 pub(crate) const ETCD_NAMESPACE: &str = "/lucasim/services";
+
