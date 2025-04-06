@@ -20,19 +20,33 @@ use tracing::info;
 
 pub struct UserRpcServer {
     svc: ServiceContext,
+    service_register:EtcdServiceRegister,
 }
 
 impl UserRpcServer {
     async fn new(config: Config) -> UserRpcServer {
+        let service_register = EtcdServiceRegister::from_config(&config.etcd).await.expect("EtcdServiceRegister success");
         Self {
-            svc: ServiceContext::new(config).await,
+            svc: ServiceContext::new(config.clone()).await,
+            service_register,
         }
     }
 
     pub async fn start(config: Config) -> anyhow::Result<()> {
-        let user_service_rpc = UserRpcServer::new(config.clone()).await;
+        let mut user_service_rpc = UserRpcServer::new(config.clone()).await;
+        // 注册服务发现
+        user_service_rpc.service_register.register(ServiceInstance {
+            id: nanoid!(),
+            name: config.name.clone(),
+            endpoints: vec![config.listen_on.clone()],
+            version: "0.1".to_string(),
+            metadata: Default::default(),
+        }).await.expect("register success");
+        
+        
         let service = UserServiceServer::new(user_service_rpc);
         info!("listen on: {}", config.listen_on.clone());
+        
 
         Server::builder()
             .add_service(service)
