@@ -6,3 +6,13 @@ edition = "2021"
 [dependencies]
 argon2 = "0.5.3"
 serde = { workspace = true, features = ["derive"] }
+async-trait.workspace = true
+anyhow.workspace = true
+etcd-client = "0.14.1"
+nanoid.workspace = true
+tokio = { workspace = true, features = ["full"] }
+tower = { workspace = true, features = ["discover"] }
+tracing.workspace = true
+tracing-subscriber.workspace = true
+dashmap.workspace = true
+serde_json = "1.0.140"

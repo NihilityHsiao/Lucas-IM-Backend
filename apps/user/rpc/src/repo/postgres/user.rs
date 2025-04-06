@@ -36,7 +36,7 @@ impl UserRepo for UserPostgres {
         Ok(user)
     }
 
-    async fn find_by_ids(&self, ids:Vec<String>) -> Result<Vec<User>, Error> {
+    async fn find_by_ids(&self, ids: Vec<String>) -> Result<Vec<User>, Error> {
         let sql = format!(r"select * from users where id in ('{}')", ids.join(r"','"));
         let rows = sqlx::query_as(&sql).fetch_all(&self.pool).await?;
 

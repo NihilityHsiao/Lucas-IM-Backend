@@ -1,0 +1,14 @@
+name: msg-gateway.rpc
+listen_on: 0.0.0.0:50052
+# 使用etcd作为注册中心
+etcd:
+  hosts:
+    - 192.168.0.103:2379
+  key: msg-gateway.rpc
+
+
+redis:
+  host: 192.168.0.103
+  port: 6379
+  seq_step: 10000
+
