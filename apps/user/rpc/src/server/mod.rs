@@ -11,6 +11,9 @@ use crate::pb::user::{
     SendRegisterCodeResponse, UserOnlineCountRequest, UserOnlineCountResponse,
 };
 use crate::service_context::ServiceContext;
+use common::service_register::etcd::EtcdServiceRegister;
+use common::service_register::{ServiceInstance, ServiceRegister};
+use nanoid::nanoid;
 use tonic::transport::Server;
 use tonic::{async_trait, Request, Response, Status};
 use tracing::info;

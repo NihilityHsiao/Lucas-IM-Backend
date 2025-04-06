@@ -249,25 +249,11 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_service() -> anyhow::Result<()> {
-        let config = EtcdConfig {
+        let etcd_config = EtcdConfig {
             hosts: vec!["192.168.0.103:2379".to_string()],
             key: "user.rpc".to_string(),
         };
-        let mut reg_1 = EtcdServiceRegister::from_config(&config).await?;
-
-        let service_1 = ServiceInstance {
-            id: nanoid!(),
-            endpoints: vec![
-                "192.168.0.6:20001".to_string(),
-                "192.168.0.7:20001".to_string(),
-                "192.168.0.8:20001".to_string(),
-            ],
-            name: "user-rpc".to_string(),
-            version: "0.1".to_string(),
-            metadata: Default::default(),
-        };
-
-        reg_1.register(service_1).await?;
+        let mut reg_1 = EtcdServiceRegister::from_config(&etcd_config).await?;
 
         let services = reg_1.get_service("user").await;
 

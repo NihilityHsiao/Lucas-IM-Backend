@@ -1,3 +1,3 @@
-mod logic;
 mod config;
+mod logic;
 mod server;
